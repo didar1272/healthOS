@@ -17,4 +17,7 @@ class Phone(models.Model):
     company = models.ForeignKey(
         Company, on_delete=models.CASCADE, related_name='phone_company')
     assigned_customer = models.ForeignKey(
-        Customer, null=True, on_delete=models.CASCADE, related_name='phone_customer')
+        Customer, null=True, blank=True, on_delete=models.CASCADE, related_name='phone_customer')
+
+    def __str__(self):
+        return self.phone_number

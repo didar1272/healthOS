@@ -7,11 +7,6 @@ from .strings import SUBSCRIPTION_PLANS
 # Create your models here.
 
 
-def number_uniqness(value):
-    if value:
-        print(value)
-
-
 class Customer(models.Model):
     customer_id = models.CharField(
         max_length=16, primary_key=True)
@@ -27,3 +22,6 @@ class Customer(models.Model):
         max_length=64, blank=True, choices=SUBSCRIPTION_PLANS)
     registrasion_datetime = models.DateTimeField(default=now, editable=False)
     # testfield = models.CharField(max_length=64, null=True)
+
+    def __str__(self):
+        return self.customer_email
