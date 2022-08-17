@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 
-from .strings import SUBSCRIPTION_PLANS
 
 # Create your models here.
 
@@ -18,8 +17,6 @@ class Customer(models.Model):
     customer_password = models.CharField(
         max_length=128)
     balance = models.IntegerField(default=1000)
-    current_plan = models.CharField(
-        max_length=64, blank=True, choices=SUBSCRIPTION_PLANS)
     registrasion_datetime = models.DateTimeField(default=now, editable=False)
     # testfield = models.CharField(max_length=64, null=True)
 
