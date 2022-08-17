@@ -147,7 +147,54 @@ class AddPhoneNumber(View):
 
 
 class AddPrimaryNumber(View):
-    pass
+    def post(self, request, *args, **kwargs):
+        response_data = {}
+        try:
+            data = request.POST
+            if not data['email'] or 'email' not in data:
+                response_data = {
+                    "result": "Something went wrong. Please check your email input"
+                }
+                return JsonResponse(response_data)
+
+            if not data['number'] or 'number' not in data:
+                response_data = {
+                    "result": "Something went wrong. Please check your Phone Number input"
+                }
+                return JsonResponse(response_data)
+
+            input_number = data['number']
+            input_email = data['email']
+
+            customer_obj = Customer.objects.filter(customer_email=input_email)
+
+            if not customer_obj.exists():
+
+                response_data = {
+                    "result": "Customer does not exist."
+                }
+                return JsonResponse(response_data)
+
+            if not Phone.objects.filter(phone_number=input_number, assigned_customer=customer_obj[0]).exists():
+                response_data = {
+                    "result": "The Phone number does not belong to the Customer"
+                }
+                return JsonResponse(response_data)
+
+            customer_obj[0].primary_number = input_number
+            customer_obj[0].save()
+
+            response_data = {
+                "result": "Primary Phone Number added Successfully.",
+            }
+
+            return JsonResponse(response_data)
+
+        except:
+            response_data = {
+                "result": "Something went wrong. Please check your inputs"
+            }
+            return JsonResponse(response_data)
 
 
 class SubscribeToPlan(View):
