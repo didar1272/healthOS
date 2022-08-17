@@ -37,6 +37,7 @@ CORS_ALLOWED_ORIGINS = ['*']
 INSTALLED_APPS = [
     'customer',
     'company',
+    'subscriptions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

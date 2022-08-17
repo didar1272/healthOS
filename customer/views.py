@@ -93,3 +93,19 @@ class CustomerRegistration(View):
                 "result": "Something went wrong. Please check your inputs"
             }
             return JsonResponse(response_data)
+
+
+class AddPhoneNumber(View):
+    pass
+
+
+class AddPrimaryNumber(View):
+    pass
+
+
+class SubscribeToPlan(View):
+    pass
+
+
+class CancelGoldPlan(View):
+    pass
