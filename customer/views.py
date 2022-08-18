@@ -14,6 +14,7 @@ from django.utils.timezone import now
 
 
 class CustomerRegistration(View):
+    """New customer Registration"""
 
     def post(self, request, *args, **kwargs):
         response_data = {}
@@ -56,6 +57,7 @@ class CustomerRegistration(View):
                 return JsonResponse(response_data)
 
             assigned_number = available_number(input_company)
+            # checking if there is any available number to assign
 
             if not assigned_number:
                 response_data = {
@@ -95,6 +97,8 @@ class CustomerRegistration(View):
 
 
 class AddPhoneNumber(View):
+    """ Assigns a phone number to existing customers"""
+
     def post(self, request, *args, **kwargs):
         response_data = {}
         try:
@@ -133,6 +137,7 @@ class AddPhoneNumber(View):
 
             Phone.objects.filter(phone_number=assigned_number).update(
                 assigned_customer=customer_obj[0])
+            # updating the phone table with customer object
 
             response_data = {
                 "result": "New Phone Number added Successfully.",
@@ -149,6 +154,8 @@ class AddPhoneNumber(View):
 
 
 class AddPrimaryNumber(View):
+    """ Assigns or changes primary phone number to existing customers"""
+
     def post(self, request, *args, **kwargs):
         response_data = {}
         try:
@@ -200,6 +207,8 @@ class AddPrimaryNumber(View):
 
 
 class SubscribeToPlan(View):
+    """Allows a customer to subscribe to a plan"""
+
     def post(self, request, *args, **kwargs):
         response_data = {}
         try:
@@ -254,6 +263,7 @@ class SubscribeToPlan(View):
 
             subscibers_obj = Subscribers(
                 phone__company=phone_obj[0].company, customer=customer_obj[0])
+            # checking if the customer has already subscribed to a particular company plan
 
             if subscibers_obj.exists():
                 response_data = {
@@ -262,6 +272,7 @@ class SubscribeToPlan(View):
                 return JsonResponse(response_data)
 
             if customer_obj[0].balance >= sub_obj.plan_cost:
+                # if customers current balance is greater than plan cost, then allow him to subscribe
                 new_subsciber_obj = Subscribers()
                 new_subsciber_obj.customer = customer_obj[0]
                 new_subsciber_obj.phone = phone_obj[0]
@@ -284,6 +295,8 @@ class SubscribeToPlan(View):
 
 
 class CancelGoldPlan(View):
+    """Allows a customer to cancel the gold plan"""
+
     def post(self, request, *args, **kwargs):
         response_data = {}
         try:
@@ -309,15 +322,17 @@ class CancelGoldPlan(View):
 
             subscibers_obj = Subscribers(
                 phone=phone_obj[0], active_plan=plan_to_be_cancelled)
+            # finds out the subscriber object for a particular number and gold plan
 
             if not subscibers_obj.exists():
                 response_data = {
-                    "result": "You already have not subscribed to this plan"
+                    "result": "You have not subscribed to this plan"
                 }
                 return JsonResponse(response_data)
 
             subscibers_obj.possible_end_date = now()
             subscibers_obj.save()
+            # cancelling the gold plan by assigning end date as today.
 
             response_data = {
                 "result": F"You have Successfully cancelled Gold plan.",
